@@ -1,1 +1,1 @@
-# CS444_Operatinga_Systems_II
+# CS444_Operating_Systems_II
