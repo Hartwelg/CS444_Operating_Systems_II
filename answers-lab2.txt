@@ -1,0 +1,15 @@
+2.
+Entry   Base Virtual Address    Points to:
+1023    0xffc00000              page table for top 4MB of physical memory 
+1022    0xff800000              page table for next 4MB of physical memory (below top 4MB)
+960     0xf0000000              KERNBASE
+959     0xefc00000              MMIOLIM
+958     0xef800000              ULIM
+2       0x00800000              UTEXT
+1       0x00400000              UTEMP
+0       0x00000000
+
+3. User mode and kernel mode are separated with the CPL bits that exist in the CS register. This protects the kernel space from user programs. The correct permission bits must be set for the user to be allowed to read or write to the kernel's memory.
+4. The maximum amount of memory that is supported by JOS is 256mb. There is a comment in kern/pmap.h that explains this.
+5. Assuming we actually had the max. amount of physical memory, there would be one page directory containing the addresses of 1024 page tables (4096/4). Each page table is 4096 bytes in size. This makes the overhead equal to 4MB[4096(page directory) + [4096(size of page table) * 1024(number of page tables)]].
+6. We transition to running at an EIP above KERNBASE a little bit after enabling paging. The thing that makes it possible to keep executing at a low EIP after enabling paging and before switching to the EIP above KERNBASE is the fact that there are virtual addresses that are mapped to the same physical addresses for bootstrapping. This is a necessary transition because the JOS kernel needs to be at high virtual addresses in order to actually execute.
